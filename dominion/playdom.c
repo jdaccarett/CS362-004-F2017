@@ -1,4 +1,6 @@
 #include "dominion.h"
+#include "interface.c"
+
 #include <stdio.h>
 #include "rngs.h"
 #include <stdlib.h>
