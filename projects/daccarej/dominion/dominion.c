@@ -5,7 +5,6 @@
 #include <math.h>
 #include <stdlib.h>
 
-
 //***********************************************//
 //           REFACATORED FUNCTIONS               //
 //***********************************************//
@@ -14,16 +13,14 @@
 // Description: Reveal cards from your deck until you reveal 2 Treasure cards. Put those Treasure cards in your hand and discard the other revealed cards.
 // Bug added: (instead of reavealing 2 treasure cards) I added a bug to reveal 3 cards.
 
-int adventurer_card(struct gameState *state, int currentPlayer, int cardDrawn, int drawntreasure, *temphand, int z){
-  while(drawntreasure<3){ //bug added here.
-
+int adventurer_card(struct gameState *state, int currentPlayer, int cardDrawn, int drawntreasure, int *temphand, int z){
+  while(drawntreasure<2){ //bug added here.
       if (state->deckCount[currentPlayer] <1){//if the deck is empty we need to shuffle discard and add to deck
           shuffle(currentPlayer, state);
       }
 
       drawCard(currentPlayer, state);
       cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer]-1];//top card of hand is most recently drawn card.
-
       if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
           drawntreasure++;
       else{
@@ -31,8 +28,8 @@ int adventurer_card(struct gameState *state, int currentPlayer, int cardDrawn, i
           state->handCount[currentPlayer]--; //this should just remove the top card (the most recently drawn one).
           z++;
       }
-  }
 
+  }
   while(z-1>=0){
     state->discard[currentPlayer][state->discardCount[currentPlayer]++]=temphand[z-1]; // discard all cards in play that have been drawn
     z=z-1;
@@ -46,7 +43,7 @@ int adventurer_card(struct gameState *state, int currentPlayer, int cardDrawn, i
 // Bug added: instead of increasing your handsize by 3 we will incease it to 4.
 
 
-int smithy_card(int currentPlayer, struct gameState *state, handPos, i){
+int smithy_card(int currentPlayer, struct gameState *state, int handPos, int i){
   //+3 Cards
   for (i = 0; i < 4; i++){ //Bug added to add 4 cards to handsize.
     drawCard(currentPlayer, state);
@@ -63,7 +60,7 @@ int smithy_card(int currentPlayer, struct gameState *state, handPos, i){
 // Bug added: Instead of 2 actions we will increase it to only +1 action and also increat the handsize by 2 instead of 1.
 
 
-int village_card(int currentPlayer, struct gameState *state, handPos, i){
+int village_card(int currentPlayer, struct gameState *state, int handPos, int i){
   //+1 Card
 
   for (i = 0; i < 2; i++){ //Bug added to add 2 cards to handsize instaed of the 1.
@@ -84,7 +81,7 @@ int village_card(int currentPlayer, struct gameState *state, handPos, i){
 // Description: You may trash a Treasure from your hand. Gain a Treasure to your hand costing up to $3 more than it.
 // Bug added: NONE:
 
-int mine_card(int j, int i, struct gameState *state, int currentPlayer, int choice1, int choice2, handPos){
+int mine_card(int j, int i, struct gameState *state, int currentPlayer, int choice1, int choice2, int handPos){
   j = state->hand[currentPlayer][choice1];  //store card we will trash
 
   if (state->hand[currentPlayer][choice1] < copper || state->hand[currentPlayer][choice1] > gold){
@@ -117,18 +114,18 @@ int mine_card(int j, int i, struct gameState *state, int currentPlayer, int choi
 
 //**********************************************************************************************//
 // CARD 5 cutpurse
-// Description:It is a terminal Silver, since it gives +Coin2.png when played, but it also makes other players discard Coppers.
-// Bug added: make other players discard gold instead of copper.
+// Description:It is a terminal Silver, since it gives +2 coins when played, but it also makes other players discard Coppers.
+// Bug added: instead of +2 coins it gives you +4 coins.
 
-int cutpurse_card(int currentPlayer, struct gameState *state, int i, int j, int k, handPos){
+int cutpurse_card(int currentPlayer, struct gameState *state, int i, int j, int k, int handPos){
 
-  updateCoins(currentPlayer, state, 2);
+  updateCoins(currentPlayer, state, 4);
 
   for (i = 0; i < state->numPlayers; i++){
       if (i != currentPlayer){
 
         for (j = 0; j < state->handCount[i]; j++){
-          if (state->hand[i][j] == gold){ //make them discard gold instead of copper
+          if (state->hand[i][j] == copper){
               discardCard(j, i, state, 0);
               break;
           }
@@ -346,6 +343,7 @@ int initializeGame(int numPlayers, int kingdomCards[10], int randomSeed,
   return 0;
 }
 
+
 int shuffle(int player, struct gameState *state) {
 
 
@@ -396,6 +394,8 @@ int playCard(int handPos, int choice1, int choice2, int choice3, struct gameStat
   //get card played
   card = handCard(handPos, state);
 
+
+
   //check if selected card is an action
   if ( card < adventurer || card > treasure_map )
     {
@@ -403,17 +403,16 @@ int playCard(int handPos, int choice1, int choice2, int choice3, struct gameStat
     }
 
   //play card
-  if ( cardEffect(card, choice1, choice2, choice3, state, handPos, &coin_bonus) < 0 )
+  if (cardEffect(card, choice1, choice2, choice3, state, handPos, &coin_bonus) < 0 )
     {
       return -1;
     }
 
+
   //reduce number of actions
   state->numActions--;
-
   //update coins (Treasure cards may be added with card draws)
-  updateCoins(state->whoseTurn, state, coin_bonus);
-
+  //updateCoins(state->whoseTurn, state, coin_bonus);
   return 0;
 }
 
@@ -424,11 +423,10 @@ int buyCard(int supplyPos, struct gameState *state) {
   }
 
   // I don't know what to do about the phase thing.
-
   who = state->whoseTurn;
 
   if (state->numBuys < 1){
-    if (DEBUG)
+    //if (DEBUG)
       printf("You do not have any buys left\n");
     return -1;
   } else if (supplyCount(supplyPos, state) <1){
@@ -436,7 +434,7 @@ int buyCard(int supplyPos, struct gameState *state) {
       printf("There are not any of that type of card left\n");
     return -1;
   } else if (state->coins < getCost(supplyPos)){
-    if (DEBUG)
+    //if (DEBUG)
       printf("You do not have enough money to buy that. You have %d coins.\n", state->coins);
     return -1;
   } else {
@@ -446,8 +444,8 @@ int buyCard(int supplyPos, struct gameState *state) {
 
     state->coins = (state->coins) - (getCost(supplyPos));
     state->numBuys--;
-    if (DEBUG)
-      printf("You bought card number %d for %d coins. You now have %d buys and %d coins.\n", supplyPos, getCost(supplyPos), state->numBuys, state->coins);
+    //if (DEBUG)
+    printf("You bought card number %d for %d coins. You now have %d buys and %d coins.\n", supplyPos, getCost(supplyPos), state->numBuys, state->coins);
   }
 
   //state->discard[who][state->discardCount[who]] = supplyPos;
@@ -816,6 +814,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
     case adventurer:
     printf("\nADVENTURER: CARD\n\n");
     adventurer_card(state, currentPlayer, cardDrawn, drawntreasure, temphand, z);
+    return 0;
 
     case council_room:
       //+4 Cards
@@ -823,6 +822,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 	{
 	  drawCard(currentPlayer, state);
 	}
+
 
       //+1 Buy
       state->numBuys++;
@@ -836,8 +836,12 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 	    }
 	}
 
+
+
       //put played card in played card pile
       discardCard(handPos, currentPlayer, state, 0);
+
+
 
       return 0;
 
@@ -900,6 +904,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
     case mine:
     printf("\n MINE CARD\n\n");
     mine_card(j, i, state, currentPlayer, choice1, choice2, handPos);
+    return 0;
 
 
     case remodel:
@@ -932,11 +937,15 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
     //ADD FUNTION HERE
     printf("\n SMITHY \n\n");
     smithy_card(currentPlayer, state, handPos, i);
+    return 0;
+
 
     case village:
     //ADD FUNCTION HERE
     printf("\n VILLAGE CARD\n\n");
     village_card(currentPlayer, state, handPos, i);
+    return 0;
+
 
     case baron:
       state->numBuys++;//Increase buys by 1!
@@ -1194,7 +1203,8 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
     case cutpurse:
     printf("\n CUTPURSE CARD\n\n");
     cutpurse_card(currentPlayer, state, i, j, k, handPos);
-
+    return 0;
+    printf("heresdfdf\n");
 
 
     case embargo:
