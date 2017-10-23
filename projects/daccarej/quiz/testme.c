@@ -15,7 +15,8 @@ char *inputString()
 {
     // TODO: rewrite this function
     static char string[6];
-    for( int i = 0; i < 5; ++i){
+    int i;
+    for(i = 0; i < 5; ++i){
       string[i] = (rand() % (122 + 1 - 97)) + 97; // starting on 'a', ending on 'z'}'
     }
     return string;
