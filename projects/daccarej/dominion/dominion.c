@@ -14,7 +14,7 @@
 // Bug added: (instead of reavealing 2 treasure cards) I added a bug to reveal 3 cards.
 
 int adventurer_card(struct gameState *state, int currentPlayer, int cardDrawn, int drawntreasure, int *temphand, int z){
-  while(drawntreasure<2){ //bug added here.
+  while(drawntreasure<3){ //bug added here.
       if (state->deckCount[currentPlayer] <1){//if the deck is empty we need to shuffle discard and add to deck
           shuffle(currentPlayer, state);
       }
@@ -812,7 +812,6 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
   switch( card )
     {
     case adventurer:
-    printf("\nADVENTURER: CARD\n\n");
     adventurer_card(state, currentPlayer, cardDrawn, drawntreasure, temphand, z);
     return 0;
 
@@ -935,14 +934,12 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 
     case smithy:
     //ADD FUNTION HERE
-    printf("\n SMITHY \n\n");
     smithy_card(currentPlayer, state, handPos, i);
     return 0;
 
 
     case village:
     //ADD FUNCTION HERE
-    printf("\n VILLAGE CARD\n\n");
     village_card(currentPlayer, state, handPos, i);
     return 0;
 
@@ -1201,10 +1198,8 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
       return 0;
 
     case cutpurse:
-    printf("\n CUTPURSE CARD\n\n");
     cutpurse_card(currentPlayer, state, i, j, k, handPos);
     return 0;
-    printf("heresdfdf\n");
 
 
     case embargo:

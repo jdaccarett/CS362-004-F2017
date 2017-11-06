@@ -19,7 +19,7 @@ int main(int argc, char** argv)	{
 
   printf ("\n****** Start Card Test: Cutpurse *****\n");
 
-  cardEffect(cutpurse_card, -1, -1, -1, &state, 1, 0);
+  cardEffect(cutpurse_card, -1, -1, -1, &state, 0, 0);
 
   //Holds coin amount after using cutpurse card
   int coinsAfter = state.coins;

@@ -31,6 +31,8 @@ int main(int argc, char** argv)	{
   initializeGame(2, k, 10, &state);
   state.hand[0][0] = adventurer;
 
+  printHand(0, &state);
+
   int oldHandCnt = state.handCount[currentPlayer] - 1; //-1 to account discarding adventurer after we play it.
 
   // adventurer card has a bug that reveals 3 treasure cards instead of 2 and add them to your hand.
