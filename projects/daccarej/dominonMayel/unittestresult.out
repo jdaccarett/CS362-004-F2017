@@ -1,0 +1,27 @@
+
+****** Start Function Test: updateCoins() *****
+
+Testing for copper Treasure card
+
+copper Treasure Cards = TEST FAILED
+Coins = 0 and they should = to 10
+
+
+Testing for silver Treasure card
+
+silver Treasure Cards = TEST FAILED
+Coins = 0 and they should = to 20
+
+
+Testing for gold Treasure card
+
+gold Treasure Cards = TEST FAILED
+Coins = 0 and they should = to 30
+
+
+Testing for zero Treasure card
+
+zero Treasure Cards = TEST PASSED
+
+
+****** End Function Test: updateCoins() *****
