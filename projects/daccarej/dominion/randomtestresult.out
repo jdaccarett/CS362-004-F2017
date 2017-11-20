@@ -1,6 +1,6 @@
 ****** Begin Random Test Smithy *****
 
-TEST FAILED: 
+TEST PASSED: 
 ****** END Random Test Smithy *****
 ****** Begin Random Test Cutpurse *****
 
@@ -67,6 +67,8 @@ Instead we are gaining + 0 coins.
 Test Passed
 ****** END Random Test Adventurer*****
 ****** Begin Random Test Adventurer*****
+
+TEST FAILED
 ****** END Random Test Adventurer*****
 File 'dominion.c'
 Lines executed:26.56% of 655
