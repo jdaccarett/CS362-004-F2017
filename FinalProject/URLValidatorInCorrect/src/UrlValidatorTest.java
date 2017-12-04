@@ -145,7 +145,8 @@ public class UrlValidatorTest extends TestCase {
 	   }
    }
    
-   public void testYourSecondPartition(){
+   public void testYourSecondPartition()
+   {
 	   UrlValidator urlVal = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
 	   
 	   System.out.println("\n********** Second Partion Testing Start **********\n");               
@@ -157,12 +158,37 @@ public class UrlValidatorTest extends TestCase {
    }
    
    
-   public void testIsValid()
-   {
-	   for(int i = 0;i<10000;i++)
-	   {
-		   
-	   }
+public void testIsValid()
+{
+	   	
+	     // Generates random distinct port numbers ranging from 0 - 10000
+	     // next it attaches the number to a valid url and checks if its valid 
+	     // with the port number attached
+	     UrlValidator urlVal = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
+
+	     final Random r = new Random();
+	     final Set<Integer> s = new HashSet<>();
+	     for(int i = 0; i < 10000; i++){
+	    	 		while(true) {
+	               int num = r.nextInt(10000) + 1;
+	               if (s.contains(num) == false) {
+	                   s.add(num);
+	                   // Append random port number to valid url and check its validity
+	                   // If the url is valid print the url and see which port numbers are currently valid.
+	                   // This will allows to catch on patterns. For example the current unit tests shows
+	                   // that all valid port numbers from 0 - 10000 tests only port numbers with 3 digits or
+	                   // less are being marked as valid. This seems like a potential bug.
+	                   StringBuilder sb = new StringBuilder (String.valueOf ("https://www.example.com:"));
+	                   sb.append (num);
+	                   String newStr = sb.toString ();
+	        		      System.out.println(urlVal.isValid(newStr));               
+	        		      if(urlVal.isValid(newStr)) {
+		        		      System.out.println(newStr);
+	        		      }
+	                   break;
+	               }
+	           }
+	     }
    }
    
    public void testAnyOtherUnitTest()
